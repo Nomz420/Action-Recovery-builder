@@ -109,6 +109,9 @@ jobs:
         make
         cp mkbootimg /home/runner/work/Action-Recovery-builder/Action-Recovery-builder/workspace/out/host/linux-x86/bin/mkbootimg
         cd ..
+        export ALLOW_MISSING_DEPENDENCIES=true
+        source build/envsetup.sh
+        lunch ${{ github.event.inputs.MANIFEST_TYPE }}_${{ github.event.inputs.DEVICE_NAME }}-eng 
         make recoveryimage -j$(nproc --all)
       
     - name: Upload to Release
