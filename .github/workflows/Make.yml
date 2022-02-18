@@ -95,6 +95,7 @@ jobs:
         cd ${{ steps.pwd.outputs.pwd }}
         git clone https://github.com/osm0sis/mkbootimg
         cd mkbootimg
+        sudo make
         sudo make install
         cd ..
         export ALLOW_MISSING_DEPENDENCIES=true
