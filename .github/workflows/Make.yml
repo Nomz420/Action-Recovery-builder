@@ -90,6 +90,7 @@ jobs:
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
 
     - name: Building recovery
+      continue-on-error: true
       run: |
         PATH=~/bin:$PATH
         cd ${{ steps.pwd.outputs.pwd }}
@@ -97,7 +98,18 @@ jobs:
         source build/envsetup.sh
         lunch ${{ github.event.inputs.MANIFEST_TYPE }}_${{ github.event.inputs.DEVICE_NAME }}-eng 
         make clean
-        make recoveryimage -j$(nproc --all)        
+        make recoveryimage -j$(nproc --all)
+        
+    - name: Do something fucky wucky to make it work
+      run: |
+        PATH=~/bin:$PATH
+        cd ${{ steps.pwd.outputs.pwd }}
+        git clone https://github.com/osm0sis/mkbootimg.git
+        cd mkbootimg
+        make
+        cp mkbootimg /home/runner/work/Action-Recovery-builder/Action-Recovery-builder/workspace/out/host/linux-x86/bin/mkbootimg
+        cd ..
+        make recoveryimage -j$(nproc --all)
       
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
