@@ -22,7 +22,7 @@ on:
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
-        default: 'master'
+        default: 'twrp-9.0'
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
