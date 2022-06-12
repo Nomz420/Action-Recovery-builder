@@ -6,31 +6,31 @@ on:
       MANIFEST_URL:
         description: 'MANIFEST_URL'
         required: true
-        default: 'git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git'
+        default: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp'
       MANIFEST_BRANCH:
         description: 'LIBRARY_BRANCH'
         required: true
-        default: 'twrp-9.0'
+        default: 'twrp-11'
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'https://github.com/azwhikaru/twrp_device_xiaomi_archytas'
+        default: 'https://github.com/Nomz420/android_device_oppo_a91'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
-        default: 'twrp-9.0'
+        default: 'twrp-11'
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
-        default: 'device/xiaomi/Archytas'
+        default: 'device/oppo/a91'
       DEVICE_NAME:
         description: 'DEVICE_NAME'
         required: true
-        default: 'Archytas'
+        default: 'a91'
       MAKEFILE_NAME:
         description: 'MAKEFILE_NAME'
         required: true
-        default: 'omni_Archytas'
+        default: 'twrp_a91'
 
 jobs:
   build:
@@ -102,8 +102,19 @@ jobs:
         source build/envsetup.sh
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng 
         make clean
-        make recoveryimage -j$(nproc --all)        
-      
+        make recoveryimage -j$(nproc --all)      
+        ls -a
+        pwd
+        ls -a ..
+        ls -a out/target/product
+        ls -a out/target/product/${{ github.event.inputs.DEVICE_NAME }}
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: i-hope-it-doesnt-upload-too-much-data
+        path: workspace/
+        
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
