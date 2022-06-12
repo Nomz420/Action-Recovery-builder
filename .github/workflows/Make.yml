@@ -18,7 +18,7 @@ on:
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'https://github.com/Nomz420/android_device_alps_oplus_mssi_64_cn'
+        default: 'https://github.com/azwhikaru/twrp_device_xiaomi_archytas'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
@@ -26,11 +26,11 @@ on:
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
-        default: 'device/alps/oplus_mssi_64_cn'
+        default: 'device/xiaomi/Archytas'
       DEVICE_NAME:
         description: 'DEVICE_NAME'
         required: true
-        default: 'oplus_mssi_64_cn'
+        default: 'Archytas'
 
 jobs:
   build:
@@ -90,7 +90,6 @@ jobs:
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
 
     - name: Building recovery
-      continue-on-error: true
       run: |
         PATH=~/bin:$PATH
         cd ${{ steps.pwd.outputs.pwd }}
@@ -98,21 +97,7 @@ jobs:
         source build/envsetup.sh
         lunch ${{ github.event.inputs.MANIFEST_TYPE }}_${{ github.event.inputs.DEVICE_NAME }}-eng 
         make clean
-        make recoveryimage -j$(nproc --all)
-        
-    - name: Do something fucky wucky to make it work
-      run: |
-        PATH=~/bin:$PATH
-        cd ${{ steps.pwd.outputs.pwd }}
-        git clone https://github.com/osm0sis/mkbootimg.git
-        cd mkbootimg
-        make
-        cp mkbootimg /home/runner/work/Action-Recovery-builder/Action-Recovery-builder/workspace/out/host/linux-x86/bin/mkbootimg
-        cd ..
-        export ALLOW_MISSING_DEPENDENCIES=true
-        source build/envsetup.sh
-        lunch ${{ github.event.inputs.MANIFEST_TYPE }}_${{ github.event.inputs.DEVICE_NAME }}-eng 
-        make recoveryimage -j$(nproc --all)
+        make recoveryimage -j$(nproc --all)        
       
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
@@ -122,4 +107,4 @@ jobs:
         tag_name: ${{ github.run_id }}
         body: Recovery for ${{ github.event.inputs.DEVICE_NAME }}
       env:
-        GITHUB_TOKEN: ${{ secrets.BUILD }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
