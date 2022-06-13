@@ -103,12 +103,13 @@ jobs:
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng 
         make clean
         make recoveryimage -j$(nproc --all)      
+        tree
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: testing
-        path: workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}
+        path: workspace/
         
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
